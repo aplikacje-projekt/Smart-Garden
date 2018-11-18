@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Smart Garden": {
+      "commandName": "Project",
+      "commandLineArgs": "UL"
+    }
+  }
+}
