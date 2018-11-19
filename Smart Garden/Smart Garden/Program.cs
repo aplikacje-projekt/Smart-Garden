@@ -63,12 +63,21 @@ namespace Smart_Garden
             using (var connection = new NpgsqlConnection("Host=47.254.170.16;Username=garden;Password=garden;Database=smart_garden"))
             {
                 connection.Open();
-                var deserializedMessage = JsonConvert.DeserializeObject<Message>(message);
-                string insertString =
-                    "INSERT INTO measurements (temperature, air_humidity, soil_humidity, light_density, water_level, pump_work, time) VALUES (" +
-                    deserializedMessage.temp + ", " + deserializedMessage.air + ", " + deserializedMessage.soil + ", " + deserializedMessage.light + ", " + deserializedMessage.water + ", " + deserializedMessage.pump + ", " + "'" + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + "');";
-                connection.Execute(insertString);
-                Console.WriteLine(insertString);
+                try
+                {
+                    var deserializedMessage = JsonConvert.DeserializeObject<Message>(message);
+                    string insertString =
+                        "INSERT INTO measurements (temperature, air_humidity, soil_humidity, light_density, water_level, pump_work, time) VALUES (" +
+                        deserializedMessage.temp + ", " + deserializedMessage.air + ", " + deserializedMessage.soil +
+                        ", " + deserializedMessage.light + ", " + deserializedMessage.water + ", " +
+                        deserializedMessage.pump + ", " + "'" + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + "');";
+                    connection.Execute(insertString);
+                    Console.WriteLine(insertString);
+                }
+                catch (Exception e)
+                {
+
+                }
             }
 
         }
