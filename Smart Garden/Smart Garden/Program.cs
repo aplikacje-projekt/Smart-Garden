@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using Newtonsoft.Json;
 using System.Text;
 using Dapper;
 using Npgsql;
@@ -63,20 +63,27 @@ namespace Smart_Garden
             using (var connection = new NpgsqlConnection("Host=47.254.170.16;Username=garden;Password=garden;Database=smart_garden"))
             {
                 connection.Open();
-                string temp = 12.12.ToString().Replace(',', '.');
-                string air = 12.12.ToString().Replace(',', '.');
-                string soil = 12.12.ToString().Replace(',', '.');
-                string light = 12.12.ToString().Replace(',', '.');
-                string water = 12.12.ToString().Replace(',', '.');
-                string pump = 0.0.ToString().Replace(',', '.');
-                string time = "2018-11-18 19:10:00";
-                
+                var deserializedMessage = JsonConvert.DeserializeObject<Message>(message);
                 string insertString =
                     "INSERT INTO measurements (temperature, air_humidity, soil_humidity, light_density, water_level, pump_work, time) VALUES (" +
-                    temp + ", " + air + ", " + soil + ", " + light + ", " + water + ", " + pump + ", " + "TIMESTAMP '" + time + "');";
+                    deserializedMessage.temp + ", " + deserializedMessage.air + ", " + deserializedMessage.soil + ", " + deserializedMessage.light + ", " + deserializedMessage.water + ", " + deserializedMessage.pump + ", " + "'" + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + "');";
                 connection.Execute(insertString);
+                Console.WriteLine(insertString);
             }
 
         }
+    }
+
+    public class Message
+    {
+        public string dev { get; set; }
+        public string temp { get; set; }
+        public string air { get; set; }
+        public string soil { get; set; }
+        public string light { get; set; }
+        public string water { get; set; }
+        public string rain { get; set; }
+        public string pump { get; set; }
+        public string time { get; set; }
     }
 }
