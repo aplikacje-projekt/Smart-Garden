@@ -66,17 +66,22 @@ namespace Smart_Garden
                 try
                 {
                     var deserializedMessage = JsonConvert.DeserializeObject<Message>(message);
+                    int booleanConversion;
+                    if (deserializedMessage.pump == "false")
+                        booleanConversion = 0;
+                    else
+                        booleanConversion = 1;
                     string insertString =
-                        "INSERT INTO measurements (temperature, air_humidity, soil_humidity, light_density, water_level, pump_work, time) VALUES (" +
+                        "INSERT INTO measurements (dev, temp, air, soil, rain, water, light, pump, time) VALUES (" + "'" + deserializedMessage.dev + "'" + ", " +
                         deserializedMessage.temp + ", " + deserializedMessage.air + ", " + deserializedMessage.soil +
-                        ", " + deserializedMessage.light + ", " + deserializedMessage.water + ", " +
-                        deserializedMessage.pump + ", " + "'" + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + "');";
+                        ", " + deserializedMessage.rain + ", " + deserializedMessage.water + ", " + deserializedMessage.light + ", " +
+                        booleanConversion + ", " + "'" + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + "');";
                     connection.Execute(insertString);
                     Console.WriteLine(insertString);
                 }
                 catch (Exception e)
                 {
-
+                    ;
                 }
             }
 
@@ -89,10 +94,9 @@ namespace Smart_Garden
         public string temp { get; set; }
         public string air { get; set; }
         public string soil { get; set; }
-        public string light { get; set; }
-        public string water { get; set; }
         public string rain { get; set; }
+        public string water { get; set; }
+        public string light { get; set; }
         public string pump { get; set; }
-        public string time { get; set; }
     }
 }
